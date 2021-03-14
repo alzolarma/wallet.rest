@@ -3,8 +3,6 @@ const { checkSchema, validationResult } = require("express-validator");
 const { customerValidation } = require("./../helpers/validator");
 const customerController = require("../controller/customer");
 
-// const soapRequest = require("easy-soap-request");
-
 const app = express();
 
 app.use(function (req, res, next) {
@@ -14,11 +12,6 @@ app.use(function (req, res, next) {
 		"Origin, X-Requested-With, Content-Type, Accept"
 	);
 	next();
-});
-
-app.get("/customer", (req, res) => {
-	//res.send("Hello World! customer ");
-	return res.status(200).json({ message: "Success" });
 });
 
 app.post("/customer", checkSchema(customerValidation), (req, res) => {

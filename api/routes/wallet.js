@@ -33,39 +33,16 @@ app.get(
 	}
 );
 
-app.put(
-	"/customer/:phone/:document/wallet",
-	checkSchema(transactionValidation),
-	(req, res) => {
-		const errors = validationResult(req);
-		if (!errors.isEmpty()) {
-			return res.status(422).json({
-				message: "Por favor verifique los siguientes campos",
-				errors: errors.array(),
-			});
-		}
-		return res.status(200).json({
-			message: "Transacción exitosa de edicion",
+app.post("/transaction", checkSchema(transactionValidation), (req, res) => {
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		return res.status(422).json({
+			message: "Por favor verifique los siguientes campos",
+			errors: errors.array(),
 		});
 	}
-);
-
-app.get(
-	"/customer/:phone/:document/wallet",
-	checkSchema(transactionValidation),
-	(req, res) => {
-		const errors = validationResult(req);
-		if (!errors.isEmpty()) {
-			return res.status(422).json({
-				message: "Por favor verifique los siguientes campos",
-				errors: errors.array(),
-			});
-		}
-		return res.status(200).json({
-			message: "Solicitud en proceso revise su correo",
-		});
-	}
-);
+	customerController.transactionStore(req, res);
+});
 
 app.get("/customer/:idSession/:token/wallet/confirm", (req, res) => {
 	// Debitar el dinero

@@ -38,6 +38,16 @@ const balanceValidation = {
 };
 
 const transactionValidation = {
+	phone: {
+		notEmpty: {
+			errorMessage: "El teléfono es requerido",
+		},
+	},
+	document: {
+		notEmpty: {
+			errorMessage: "El documento es requerido",
+		},
+	},
 	mount: {
 		notEmpty: {
 			errorMessage: "El monto es requerido",
@@ -45,8 +55,15 @@ const transactionValidation = {
 		isFloat: {
 			errorMessage: "El tiempo debe ser un valor numérico",
 		},
+		custom: {
+			options: (value) => {
+				if (value <= 0) {
+					throw new Error(`El monto debe ser mayor a 0`);
+				}
+				return true;
+			},
+		},
 	},
-
 	type: {
 		custom: {
 			options: (value) => {
