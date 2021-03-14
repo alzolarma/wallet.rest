@@ -1,4 +1,5 @@
 const express = require("express");
+const customerController = require("../controller/customer");
 const { checkSchema, validationResult } = require("express-validator");
 const {
 	balanceValidation,
@@ -28,10 +29,7 @@ app.get(
 				errors: errors.array(),
 			});
 		}
-		return res.status(200).json({
-			message: "Consulta exitosa",
-			data: { pay: 41000 },
-		});
+		customerController.getBalance(req, res);
 	}
 );
 

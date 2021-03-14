@@ -1,8 +1,8 @@
 const express = require("express");
 const { checkSchema, validationResult } = require("express-validator");
 const { customerValidation } = require("./../helpers/validator");
+const customerController = require("../controller/customer");
 
-// const customerController = require("../controller/customer");
 // const soapRequest = require("easy-soap-request");
 
 const app = express();
@@ -29,7 +29,7 @@ app.post("/customer", checkSchema(customerValidation), (req, res) => {
 			errors: errors.array(),
 		});
 	}
-	return res.status(200).json({ message: "Registro de cliente exitoso" });
+	customerController.store(req, res);
 });
 
 module.exports = app;
