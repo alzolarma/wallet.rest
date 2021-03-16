@@ -82,6 +82,45 @@ const transactionValidation = {
 	},
 };
 
+const paymentRequestValidation = {
+	phone: {
+		notEmpty: {
+			errorMessage: "El teléfono es requerido",
+		},
+	},
+	document: {
+		notEmpty: {
+			errorMessage: "El documento es requerido",
+		},
+	},
+	mount: {
+		notEmpty: {
+			errorMessage: "El monto es requerido",
+		},
+		isFloat: {
+			errorMessage: "El tiempo debe ser un valor numérico",
+		},
+		custom: {
+			options: (value) => {
+				if (value <= 0) {
+					throw new Error(`El monto debe ser mayor a 0`);
+				}
+				return true;
+			},
+		},
+	},
+};
+
+const paymentConfirmValidation = {
+	token: {
+		notEmpty: {
+			errorMessage: "El token es requerido",
+		},
+	},
+};
+
 exports.customerValidation = customerValidation;
 exports.balanceValidation = balanceValidation;
 exports.transactionValidation = transactionValidation;
+exports.paymentRequestValidation = paymentRequestValidation;
+exports.paymentConfirmValidation = paymentConfirmValidation;

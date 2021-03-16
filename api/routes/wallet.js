@@ -1,22 +1,14 @@
 const express = require("express");
-const customerController = require("../controller/customer");
+const walletController = require("../controller/wallet");
 const { checkSchema, validationResult } = require("express-validator");
 const {
 	balanceValidation,
 	transactionValidation,
+	paymentRequestValidation,
+	paymentConfirmValidation,
 } = require("./../helpers/validator");
 
 const app = express();
-
-app.use(function (req, res, next) {
-	res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
-	res.header(
-		"Access-Control-Allow-Headers",
-		"Access-Control-Allow-Methods",
-		"Origin, X-Requested-With, Content-Type, Accept"
-	);
-	next();
-});
 
 app.get(
 	"/customer/:phone/:document/balance",
@@ -29,7 +21,7 @@ app.get(
 				errors: errors.array(),
 			});
 		}
-		customerController.getBalance(req, res);
+		walletController.getBalance(req, res);
 	}
 );
 
@@ -41,14 +33,33 @@ app.post("/transaction", checkSchema(transactionValidation), (req, res) => {
 			errors: errors.array(),
 		});
 	}
-	customerController.transactionStore(req, res);
+	walletController.transactionStore(req, res);
 });
 
-app.get("/customer/:idSession/:token/wallet/confirm", (req, res) => {
-	// Debitar el dinero
-	return res.status(200).json({
-		message: "Confirmacion exitosa del token",
-	});
+app.post("/payment", checkSchema(paymentRequestValidation), (req, res) => {
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		return res.status(422).json({
+			message: "Por favor verifique los siguientes campos",
+			errors: errors.array(),
+		});
+	}
+	walletController.paymentRequest(req, res);
 });
+
+app.post(
+	"/payment/confirm",
+	checkSchema(paymentConfirmValidation),
+	(req, res) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(422).json({
+				message: "Por favor verifique los siguientes campos",
+				errors: errors.array(),
+			});
+		}
+		walletController.paymentConfirm(req, res);
+	}
+);
 
 module.exports = app;
